@@ -1,8 +1,4 @@
-
-int char_is_numeric(char c)
-{
-    return (c >= '0' && c <= '9');
-}
+#include <stdlib.h>
 
 int str_is_number(char *str)
 {
@@ -53,13 +49,29 @@ long simple_atoi(char *str)
 
 int my_str_cmp(char *str1, char *str2)
 {
-    if (!str1 || !str2)
-        return 0;
-    while (*str1 && *str1 == *str2)
-    {
-        str1++;
-        str2++;
-    }
-    return *str1 - *str2;
+	if (!str1 || !str2)
+		return 0;
+	while (*str1 && *str1 == *str2)
+	{
+		str1++;
+		str2++;
+	}
+	return *str1 - *str2;
 }
 
+char *sub_str_dup (char *str, long nb)
+{
+	char *output;
+	int i;
+	
+	if (!str || nb == 0)
+		return 0;
+	i = -1;
+	output = malloc(nb+1);
+	if (!output)
+		return 0;
+	output[nb] = '\0';
+	while (++i < nb)
+		output[i] = str[i];
+	return output;
+}

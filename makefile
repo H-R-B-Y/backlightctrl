@@ -6,10 +6,13 @@ all: backlightctrl
 backlightctrl: backlightctrl.c src/write_backlight.o src/string_funcs.o src/fileio.o src/string_calc.o
 	gcc $(FLAGS) backlightctrl.c src/write_backlight.o src/string_funcs.o src/fileio.o src/string_calc.o -o backlightctrl
 
+src/parsing.o: src/string_funcs.c
+	gcc $(FLAGS) -c src/parsing.c -o src/parsing.o
+
 src/string_calc.o: src/string_calc.c
 	gcc $(FLAGS) -c src/string_calc.c -o src/string_calc.o
 
-src/write_backlight.o: src/write_backlight.c src/string_funcs.o
+src/write_backlight.o: src/write_backlight.c 
 	gcc $(FLAGS) -c src/write_backlight.c -o src/write_backlight.o
 
 src/string_funcs.o: src/string_funcs.c
@@ -26,4 +29,4 @@ clean:
 
 re: fclean all
 
-.phony: clean fclean 
+.phony: clean fclean re

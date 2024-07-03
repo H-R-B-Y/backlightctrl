@@ -16,6 +16,7 @@ unsigned long max_line_length(char *path)
         return 0;
     len = 0;
     line_start = 0;
+	index = 0;
     while (read(fd, &t, 1) == 1)
     {
         if (t != '\n' && ++index)
@@ -36,7 +37,7 @@ char *read_line(int fd, char *buffer, unsigned long size)
     char t;
 
     if (!fd || !buffer || size < 1)
-        return buffer;
+        return 0;
     index = 0;
     while (read(fd, &t, 1) == 1 && t != '\n' && index < size)
         buffer[index++] = t;
