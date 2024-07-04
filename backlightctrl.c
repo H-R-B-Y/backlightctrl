@@ -3,28 +3,29 @@
 #include "src/string_funcs.h"
 #include "src/write_backlight.h"
 #include "src/string_calc.h"
+#include "src/parsing.h"
 
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
 
-void handle_relative_input(int increment)
+void handle_relative_input(int increment, struct s_backlight *target)
 {
     int fd;
     char *cv;
     char *nv;
     int buffer;
 
-    buffer = max_line_length(BACKLIGHT_PATH);
+    buffer = max_line_length(target->path);
     cv = malloc(buffer + 1);
     cv[buffer] = '\0';
-    fd = open(BACKLIGHT_PATH, O_RDONLY);
+    fd = open(target->path, O_RDONLY);
     read_line(fd, cv, buffer);
     close(fd);
     nv = my_str_add(cv, increment);
     free(cv);
-    if (validate_inputs(nv))
-        set_backlight(nv);
+    if (validate_input_str(nv, target->max_brightness_string))
+        set_backlight(nv, target);
     free(nv);
 }
 
@@ -37,55 +38,56 @@ void handle_relative_input(int increment)
 // backlightctrl set
 // backlightctrl set <number>
 // backlightctrl clr
-void handle_inputs(int argc, char **argv)
+void handle_inputs(int argc, char **argv, struct s_backlight *target)
 {
-    int value;
+	int value;
 
-    if (argc == 1)
-        return ;
-    if (!my_str_cmp(argv[1], "add") || !my_str_cmp(argv[1], "min"))
-    {
-        value = DEFAULT_INCREMENT;
-        if (argc > 2)
-            value = simple_atoi(argv[2]);
-        if (!my_str_cmp(argv[1], "min"))
-            value *= -1;
-        handle_relative_input(value);
-    }
-    else if (!my_str_cmp(argv[1], "set"))
-    {
-        if (argc < 3)
-            return ;
-        if (!validate_inputs(argv[2]))
-            return ;
-        set_backlight(argv[2]);
-    }
-    else if (!my_str_cmp(argv[1], "clr"))
-        clear_backlight();
+	if (argc == 1)
+		return ;
+	if (!my_str_cmp(argv[1], "add") || !my_str_cmp(argv[1], "min"))
+	{
+		value = DEFAULT_INCREMENT;
+		if (argc > 2)
+			value = simple_atoi(argv[2]);
+		if (!my_str_cmp(argv[1], "min"))
+			value *= -1;
+		handle_relative_input(value, target);
+	}
+	else if (!my_str_cmp(argv[1], "set"))
+	{
+		if (argc < 3)
+			return ;
+		if (!validate_input_str(argv[2], target->max_brightness_string))
+			return ;
+		set_backlight(argv[2], target);
+	}
+	else if (!my_str_cmp(argv[1], "clr"))
+		clear_backlight(target->path);
 }
 
-
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-    if (argc > 1)
-        handle_inputs(argc, argv);
-    else
-        write(1, "No Opertation Specified", 23);
+	long c_count; 
+	struct s_backlight **configs;
+	long target;
+
+	configs = 0;
+	if (argc == 1 || argc == 2)
+	{
+		write(1, "Error: Invalid input", 20);
+		return -1;
+	}
+	configs = get_backlights("./devices.cfg", &c_count);
+	if (c_count < 1 || (configs == 0 && *configs == 0))
+	{
+		write(1, "Error loading configs, please configure devices.cfg", 51);
+		return -1;
+	}
+	target = simple_atoi(argv[1]);
+	if (target > c_count-1)
+	{
+		write(1, "Error: Invalid target", 21);
+		return -1;
+	}
+	handle_inputs(argc-1, argv+1, configs[target]);
 }
-
-
-// #include <stdio.h>
-// #include <stdlib.h>
-// int main ()
-// {
-//     char *t;
-//     t = malloc(4+1);
-//     t[4] = '\0';
-//     t[3] = '2';
-//     t[2] = '9';
-//     t[1] = '9';
-//     t[0] = '0';
-//     printf("%s\n", t);
-//     t = my_str_add(t, -10);
-//     printf("%s", t);
-// }

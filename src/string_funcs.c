@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "string_funcs.h"
 
 int str_is_number(char *str)
 {
@@ -29,22 +30,22 @@ int my_str_len(char *str)
 // Why are we even converting the number to int?
 long simple_atoi(char *str)
 {
-    long output;
-    int i;
-    int sign;
+	long output;
+	int i;
+	int sign;
 
-    output = 0;
-    i = 0;
-    sign = 1;
-    while (str[i] == '-' && ++i)
-        sign *= -1;
-    while (char_is_numeric(str[i]))
-    {
-        output *= 10;
-        output += str[i] - '0';
-        i++;
-    }
-    return output * sign;
+	output = 0;
+	i = 0;
+	sign = 1;
+	while (str[i] == '-' && ++i)
+		sign *= -1;
+	while (char_is_numeric(str[i]))
+	{
+		output *= 10;
+		output += str[i] - '0';
+		i++;
+	}
+	return output * sign;
 }
 
 int my_str_cmp(char *str1, char *str2)

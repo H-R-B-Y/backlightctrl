@@ -1,10 +1,10 @@
 
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -g
 
 all: backlightctrl
 
-backlightctrl: backlightctrl.c src/write_backlight.o src/string_funcs.o src/fileio.o src/string_calc.o
-	gcc $(FLAGS) backlightctrl.c src/write_backlight.o src/string_funcs.o src/fileio.o src/string_calc.o -o backlightctrl
+backlightctrl: backlightctrl.c src/write_backlight.o src/string_funcs.o src/fileio.o src/string_calc.o src/parsing.o
+	gcc $(FLAGS) backlightctrl.c src/write_backlight.o src/string_funcs.o src/fileio.o src/string_calc.o src/parsing.o -o backlightctrl
 
 src/parsing.o: src/string_funcs.c
 	gcc $(FLAGS) -c src/parsing.c -o src/parsing.o
