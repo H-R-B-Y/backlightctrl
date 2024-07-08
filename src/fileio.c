@@ -5,30 +5,30 @@
 
 unsigned long max_line_length(char *path)
 {
-    char t;
-    unsigned long len;
-    unsigned long line_start;
-    unsigned long index;
-    int fd; 
-
-    fd = open(path, O_RDONLY);
-    if (fd < 1)
-        return 0;
-    len = 0;
-    line_start = 0;
+	char t;
+	unsigned long len;
+	unsigned long line_start;
+	unsigned long index;
+	int fd; 
+	
+	fd = open(path, O_RDONLY);
+	if (fd < 1)
+		return 0;
+	len = 0;
+	line_start = 0;
 	index = 0;
-    while (read(fd, &t, 1) == 1)
-    {
-        if (t != '\n' && ++index)
-            continue ;
-        else if (index - line_start > len || len == 0)
-            len = index - line_start;
-        line_start = index;
-        index++;
-    }
-    if (len == 0)
-        len = index;
-    return len;
+	while (read(fd, &t, 1) == 1)
+	{
+		if (t != '\n' && ++index)
+			continue ;
+		else if (index - line_start > len || len == 0)
+			len = index - line_start;
+		line_start = index;
+		index++;
+	}
+	if (index - line_start > len || len == 0)
+		len = index - line_start;
+	return len;
 }
 
 char *read_line(int fd, char *buffer, unsigned long size)
