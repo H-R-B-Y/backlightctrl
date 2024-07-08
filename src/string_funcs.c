@@ -76,3 +76,23 @@ char *sub_str_dup (char *str, long nb)
 		output[i] = str[i];
 	return output;
 }
+
+
+char *my_string_cat (char *str1, char *str2)
+{
+	char *output;
+	long len;
+	long i;
+
+	if (!str1 || !str2)
+		return 0;
+	len = my_str_len(str1) + my_str_len(str2) + 1;
+	output = malloc(len);
+	output[len-1] = '\0';
+	i = 0;
+	while (*str1 != '\0' && ++i)
+		output[i-1] = *str1++;
+	while (*str2 != '\0' && ++i)
+		output[i-1] = *str2++;
+	return output;
+}

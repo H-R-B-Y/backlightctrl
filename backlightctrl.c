@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+
 void handle_relative_input(int increment, struct s_backlight *target)
 {
     int fd;
@@ -77,7 +78,7 @@ int main(int argc, char **argv)
 		write(1, "Error: Invalid input", 20);
 		return -1;
 	}
-	configs = get_backlights("./devices.cfg", &c_count);
+	configs = get_backlights(my_string_cat(getenv("HOME"), "/.config/backlight/devices.cfg"), &c_count);
 	if (c_count < 1 || (configs == 0 && *configs == 0))
 	{
 		write(1, "Error loading configs, please configure devices.cfg", 51);

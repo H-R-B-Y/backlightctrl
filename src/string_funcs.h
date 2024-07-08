@@ -12,5 +12,6 @@ int		my_str_len(char *str);
 long	simple_atoi(char *str);
 int		my_str_cmp(char *str1, char *str2);
 char	*sub_str_dup (char *str, long nb);
+char *my_string_cat (char *str1, char *str2);
 
 #endif
